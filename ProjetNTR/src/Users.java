@@ -1,0 +1,45 @@
+import java.util.ArrayList;
+import java.util.Random;
+
+public class Users {
+	private int debit;
+	private int debitMoyen;
+	private static int nbTotalID = 0;
+	private ArrayList<Integer> bufferToReceive;
+	
+	private int ID;
+	
+	public Users() {
+		int tmp = (int)Math.round(Math.random());
+		if(tmp == 0) {
+			this.debitMoyen = 8;
+		}
+		else {
+			this.debitMoyen = 6;
+		}
+		this.debit = this.debitMoyen;
+		this.ID=nbTotalID;
+		nbTotalID++;
+		this.bufferToReceive = new ArrayList<Integer>();
+	}
+
+	public int getDebit(){
+		return this.debit;
+	}
+	public void setDebit(){
+		Random r = new Random();
+		this.debit = 0 + r.nextInt(this.debitMoyen*2+1 - 0);
+	}
+	public void setDebit(int deb){
+		this.debit = deb;
+	}
+	public void setDebitMoyen(int debit){
+		this.debitMoyen = debit;
+	}
+	public ArrayList<Integer> getBuffer() {
+		return bufferToReceive;
+	}
+	public void setBuffer(ArrayList<Integer> buffer) {
+		this.bufferToReceive = buffer;
+	}
+}

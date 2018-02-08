@@ -1,0 +1,60 @@
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
+public class Cellule {
+	private ArrayList<Users> utilisateurs;
+	private UR[][] bandePassante;
+	
+	public Cellule(){
+		this.utilisateurs = new ArrayList<Users>();
+		this.bandePassante = new UR[128][5];
+	}
+	
+	public Users maxSNR(ArrayList<Users> list) {
+		Users tmp = new Users();
+		tmp.setDebit();
+		for(Users i : list){
+			if(i.getDebit()>tmp.getDebit()){
+				tmp=i;
+			}
+		}
+		return tmp;
+	}
+	
+	public void addUser(Users login){
+		this.utilisateurs.add(login);
+	}
+	
+	
+	public static void main(String[] args) {
+		Users user1 = new Users();
+		Users user2 = new Users();
+		
+		user1.setDebitMoyen(6);
+		user2.setDebitMoyen(8);
+		
+		Cellule cell = new Cellule();
+		cell.addUser(user1);
+		cell.addUser(user2);
+		
+		long i = 500000000;
+		
+		while(i!=0) {
+			cell.maxSNR(cell.utilisateurs);
+			user1.setDebit();
+			user2.setDebit();
+			System.out.println("Débit user1 : " + user1.getDebit());
+			System.out.println("Débit user2 : " + user2.getDebit());
+			i--;
+			for(int a =0;a<128-1;a++){
+				for(int b=0; b<5-1;b++){
+					cell.bandePassante[a][b].setProprietaire(cell.maxSNR(cell.utilisateurs));
+					System.out.println("Popriétaire: " + cell.bandePassante[a][b].getProprietaire());
+				}
+				
+			}
+		}
+		//chaque utilisation on modifie le debit du l'user
+	}
+
+}

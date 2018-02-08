@@ -1,0 +1,17 @@
+
+public class Packet {
+	private int taille;
+	
+	public Packet() {
+		this.taille = 100;
+	}
+	
+	public getTaille() {
+		return this.taille;
+	}
+	
+	public void setTaille(int taille) {
+		this.taille = taille;
+	}
+
+}

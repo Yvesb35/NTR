@@ -1,0 +1,9 @@
+
+public class Packet {
+	private int taille;
+	
+	public Packet() {
+		this.taille = 100;
+	}
+
+}

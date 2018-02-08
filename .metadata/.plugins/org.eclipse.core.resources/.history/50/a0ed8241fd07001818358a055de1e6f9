@@ -1,0 +1,12 @@
+import java.util.LinkedHashMap;
+
+public class UR {
+	private LinkedHashMap<Integer,Users> map;
+		public UR(){
+		map=new LinkedHashMap<Integer, Users>();
+	}
+	
+	public void addUser(Users login){
+		this.map.put(login.getDebit(), login);
+	}
+}

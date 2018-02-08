@@ -1,0 +1,9 @@
+import java.util.LinkedHashMap;
+
+public class UR {
+	private LinkedHashMap<Users,Integer> map;
+		public UR(){
+		map=new LinkedHashMap<Users, Integer>();
+	}
+	
+}

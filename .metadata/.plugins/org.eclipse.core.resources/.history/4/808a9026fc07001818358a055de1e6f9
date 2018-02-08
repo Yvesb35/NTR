@@ -1,0 +1,11 @@
+
+public class Users {
+	private float debit;
+	final static int nbTotalID = 50;
+	private int ID;
+	
+	public Users() {
+		this.debit = (float)(Math.random() * 100);
+		this.ID = ;
+	}
+}

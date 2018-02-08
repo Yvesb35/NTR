@@ -1,0 +1,21 @@
+import java.util.ArrayList;
+
+public class Users {
+	private int debit;
+	private static int nbTotalID = 0;
+	ArrayList<Integer> buffer;
+	private int ID;
+	
+	public Users() {
+		this.debit = (int)Math.round((Math.random() * 10));
+		this.ID=nbTotalID;
+		nbTotalID++;
+		this.buffer = new ArrayList<Integer>();
+	}
+	public int getDebit(){
+		return this.debit;
+	}
+	public void setDebit(int debit){
+		this.debit=debit;
+	}
+}

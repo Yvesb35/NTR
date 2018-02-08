@@ -1,0 +1,36 @@
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
+public class Cellule {
+	private ArrayList<Users> utilisateurs;
+	private UR[][] bandePassante;
+	
+	public Cellule(){
+		this.utilisateurs = new ArrayList<Users>();
+		this.bandePassante = new UR[128][5];
+	}
+	
+	public Users maxSNR(ArrayList<Users> list) {
+		Users tmp = new Users();
+		tmp.setDebit(0);
+		for(Users i : list){
+			if(i.getDebit())
+		}
+	}
+	
+	public void addUser(Users login){
+		this.map.put(login.getDebit(), login);
+	}
+	
+	
+	public static void main(String[] args) {
+		Users user1 = new Users();
+		Users user2 = new Users();
+		
+		for(int i=0;i<100;i++){
+		}
+		//chaque utilisation on modifie le debit du l'user
+		
+	}
+
+}
