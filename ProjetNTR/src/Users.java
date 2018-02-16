@@ -52,7 +52,7 @@ public class Users {
 		this.SommeUR = this.SommeUR + s;
 	}
 	public boolean assez(){
-		return this.SommeUR>=bufferToReceive.size() * 10;
+		return this.SommeUR>=bufferToReceive.size() * 50;
 	}
 	public boolean vide(){
 		return bufferToReceive.isEmpty() ;
@@ -68,8 +68,9 @@ public class Users {
 	}
 	//mettre le cas si taille = 8 et somme ur = 9 (pour pas faire de nb négatif)
 	public int soulager(){
+		int res =0;
 		//Cas où sommeUR est >= 10
-		if(this.SommeUR >= 10) {
+		if(this.SommeUR >= 50) {
 			//Cas où on a qu'un seul paquet  dans le buffer
 			if(this.bufferToReceive.size() == 1) {
 				this.SommeUR -= this.bufferToReceive.get(0).getTaille();
@@ -87,18 +88,26 @@ public class Users {
 		}
 		//Cas où sommeUR est inférieur à 10
 		else {
-			if(this.bufferToReceive.get(0).getTaille() < this.SommeUR) {
+			if(this.bufferToReceive.get(0).getTaille() <= this.SommeUR) {
 				this.SommeUR -= this.bufferToReceive.get(0).getTaille();
 				int tmp = this.bufferToReceive.get(0).getTime();
 				this.bufferToReceive.remove(0);
 				return tmp;
 			}
 			else {
-				this.SommeUR -= this.bufferToReceive.get(0).getTaille();
 				this.bufferToReceive.get(0).setTaille(this.bufferToReceive.get(0).getTaille()-this.SommeUR);
+				this.SommeUR =0; 
+				System.out.println("je suis passer par la");
+				res = 0;
 			}
 		}
 		this.SommeUR = 0;
-		return -1;
+		return res;
+	}
+	
+	public void plusTimes(){
+		for( Packet p : bufferToReceive){
+			p.setTime(p.getTime()+1);
+		}
 	}
 }

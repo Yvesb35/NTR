@@ -4,7 +4,7 @@ public class Packet {
 	private int time;
 	
 	public Packet() {
-		this.taille = 10;
+		this.taille = 50;
 		this.time = 0;
 	}
 	
