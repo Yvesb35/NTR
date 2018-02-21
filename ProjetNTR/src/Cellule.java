@@ -5,6 +5,7 @@ import java.util.Random;
 
 public class Cellule {
 	private ArrayList<Users> utilisateurs;
+	private ArrayList<Users> roundrobin;
 	private ArrayList<Users> utilisateursBesoin;
 	private UR[][] bandePassante;
 	private HashMap<Users, ArrayList<Integer>> delaiUtilisateurs;
@@ -16,7 +17,12 @@ public class Cellule {
 		this.bandePassante = new UR[128][5];
 		this.delaiUtilisateurs = new HashMap<Users, ArrayList<Integer>>();
 	}
-
+	
+	public Users roundRobin() {
+		Users user = this.roundrobin.remove(0);
+		this.roundrobin.add(user);
+		return user;
+	}
 	public Users maxSNR(ArrayList<Users> list) {
 		Users tmp = list.get(0);
 		for (Users i : list) {
@@ -63,7 +69,7 @@ public class Cellule {
 		Users user8 = new Users();
 		Users user9 = new Users();
 		Users user10 = new Users();
-
+		
 		Cellule cell = new Cellule();
 		long i = 10000;
 		long compte = 0;
@@ -102,16 +108,16 @@ public class Cellule {
 			user9.setDebit();
 			user10.setDebit();
 
-			System.out.println("DÃ©bit user0 : " + user1.getDebit());
-			System.out.println("DÃ©bit user1 : " + user2.getDebit());
-			System.out.println("DÃ©bit user0 : " + user3.getDebit());
-			System.out.println("DÃ©bit user1 : " + user4.getDebit());
-			System.out.println("DÃ©bit user0 : " + user5.getDebit());
-			System.out.println("DÃ©bit user1 : " + user6.getDebit());
-			System.out.println("DÃ©bit user0 : " + user7.getDebit());
-			System.out.println("DÃ©bit user1 : " + user8.getDebit());
-			System.out.println("DÃ©bit user0 : " + user9.getDebit());
-			System.out.println("DÃ©bit user1 : " + user10.getDebit());
+			System.out.println("Débit user0 : " + user1.getDebit());
+			System.out.println("Débit user1 : " + user2.getDebit());
+			System.out.println("Débit user0 : " + user3.getDebit());
+			System.out.println("Débit user1 : " + user4.getDebit());
+			System.out.println("Débit user0 : " + user5.getDebit());
+			System.out.println("Débit user1 : " + user6.getDebit());
+			System.out.println("Débit user0 : " + user7.getDebit());
+			System.out.println("Débit user1 : " + user8.getDebit());
+			System.out.println("Débit user0 : " + user9.getDebit());
+			System.out.println("Débit user1 : " + user10.getDebit());
 			i--;
 			// On initialise a chaque trame le nombre de paquet a recevoir des utilisateurs
 			for (Users u : cell.utilisateursBesoin) {
@@ -155,7 +161,7 @@ public class Cellule {
 					cell.bandePassante[a][b].setProprietaire(proprio);
 					proprio.ajoutUR(proprio.getDebit());
 					//somme += proprio.getDebit();
-					System.out.print("PopriÃ©taire: " + cell.bandePassante[a][b].getProprietaire().getID());
+					System.out.print("Popriétaire: " + cell.bandePassante[a][b].getProprietaire().getID());
 					System.out.println(" avec le debit = " + cell.bandePassante[a][b].getProprietaire().getDebit());
 				}
 				// Le dernier est ici.
@@ -189,7 +195,7 @@ public class Cellule {
 				cell.moyenne = delaiUserTrame / consoUserTrame;
 				cell.delaiUtilisateurs.get(u).add(cell.moyenne);// Porbleme ici
 																// et y'a une
-																// probabilitÃ©
+																// probabilité
 																// de division
 																// par 0
 				}
