@@ -23,6 +23,8 @@ public class Cellule {
 		this.roundrobin.add(user);
 		return user;
 	}
+	public void Fonctiondemerde() {
+	}
 	public Users maxSNR(ArrayList<Users> list) {
 		Users tmp = list.get(0);
 		for (Users i : list) {
