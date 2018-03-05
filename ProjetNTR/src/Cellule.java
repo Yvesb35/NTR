@@ -108,16 +108,16 @@ public class Cellule {
 			user9.setDebit();
 			user10.setDebit();
 
-			System.out.println("Débit user0 : " + user1.getDebit());
-			System.out.println("Débit user1 : " + user2.getDebit());
-			System.out.println("Débit user0 : " + user3.getDebit());
-			System.out.println("Débit user1 : " + user4.getDebit());
-			System.out.println("Débit user0 : " + user5.getDebit());
-			System.out.println("Débit user1 : " + user6.getDebit());
-			System.out.println("Débit user0 : " + user7.getDebit());
-			System.out.println("Débit user1 : " + user8.getDebit());
-			System.out.println("Débit user0 : " + user9.getDebit());
-			System.out.println("Débit user1 : " + user10.getDebit());
+			System.out.println("DÃ©bit user0 : " + user1.getDebit());
+			System.out.println("DÃ©bit user1 : " + user2.getDebit());
+			System.out.println("DÃ©bit user0 : " + user3.getDebit());
+			System.out.println("DÃ©bit user1 : " + user4.getDebit());
+			System.out.println("DÃ©bit user0 : " + user5.getDebit());
+			System.out.println("DÃ©bit user1 : " + user6.getDebit());
+			System.out.println("DÃ©bit user0 : " + user7.getDebit());
+			System.out.println("DÃ©bit user1 : " + user8.getDebit());
+			System.out.println("DÃ©bit user0 : " + user9.getDebit());
+			System.out.println("DÃ©bit user1 : " + user10.getDebit());
 			i--;
 			// On initialise a chaque trame le nombre de paquet a recevoir des utilisateurs
 			for (Users u : cell.utilisateursBesoin) {
@@ -161,7 +161,7 @@ public class Cellule {
 					cell.bandePassante[a][b].setProprietaire(proprio);
 					proprio.ajoutUR(proprio.getDebit());
 					//somme += proprio.getDebit();
-					System.out.print("Popriétaire: " + cell.bandePassante[a][b].getProprietaire().getID());
+					System.out.print("PopriÃ©taire: " + cell.bandePassante[a][b].getProprietaire().getID());
 					System.out.println(" avec le debit = " + cell.bandePassante[a][b].getProprietaire().getDebit());
 				}
 				// Le dernier est ici.
@@ -195,7 +195,7 @@ public class Cellule {
 				cell.moyenne = delaiUserTrame / consoUserTrame;
 				cell.delaiUtilisateurs.get(u).add(cell.moyenne);// Porbleme ici
 																// et y'a une
-																// probabilité
+																// probabilitÃ©
 																// de division
 																// par 0
 				}
