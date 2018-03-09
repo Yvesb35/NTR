@@ -5,8 +5,13 @@ public class Users {
 	private int debit;
 	private int debitMoyen;
 	private static int nbTotalID = 0;
+	private double sommeConso;
 	private int SommeUR;
+	private double sommeDelai;
+	private int taillepaquet=20;
 	private ArrayList<Packet> bufferToReceive;
+	private int randomNBTrame;
+	private int moyNBpaq;
 
 	private int ID;
 
@@ -21,24 +26,54 @@ public class Users {
 		this.debit = this.debitMoyen;
 		this.ID=nbTotalID;
 		nbTotalID++;
+		this.sommeConso = 0;
 		this.SommeUR=0;
 		this.bufferToReceive = new ArrayList<Packet>();
+		this.randomNBTrame = 0;
 	}
 
 	public int getSommeUR() {
 		return this.SommeUR;
 	}
+	public void clear(){
+		this.bufferToReceive.clear();
+	}
 
 	public int getDebit(){
 		return this.debit;
+	}
+	public double getConso(){
+		return this.sommeConso;
+	}
+	public void setConso(double conso){
+		this.sommeConso = conso;
 	}
 	public void setDebit(){
 		Random r = new Random();
 		this.debit = r.nextInt(this.debitMoyen*2+1 );
 	}
+	public int getMoyNBpaq() {
+		return moyNBpaq;
+	}
+
+	public void setMoyNBpaq(int moyNBpaq) {
+		this.moyNBpaq = moyNBpaq;
+	}
+
+	public double getDelai(){
+		return this.sommeDelai;
+	}
+	public int getDelaiMoyen(){
+		return this.debitMoyen;
+	}
+	public void setDelai( double delai){
+		this.sommeDelai = delai;
+	}
+	
 	public void setDebit(int deb){
 		this.debit = deb;
 	}
+	
 	public void setDebitMoyen(int debit){
 		this.debitMoyen = debit;
 	}
@@ -52,7 +87,14 @@ public class Users {
 		this.SommeUR = this.SommeUR + s;
 	}
 	public boolean assez(){
-		return this.SommeUR>=bufferToReceive.size() * 50;
+		return this.SommeUR>=bufferToReceive.size() * taillepaquet;
+	}
+	public int getRandomNBTrame(){
+		return this.randomNBTrame;
+	}
+	
+	public void setRandomNBTrame( int nb){
+		this.randomNBTrame = nb;
 	}
 	public boolean vide(){
 		return bufferToReceive.isEmpty() ;
@@ -70,7 +112,7 @@ public class Users {
 	public int soulager(){
 		int res =0;
 		//Cas où sommeUR est >= 10
-		if(this.SommeUR >= 50) {
+		if(this.SommeUR >= taillepaquet) {
 			//Cas où on a qu'un seul paquet  dans le buffer
 			if(this.bufferToReceive.size() == 1) {
 				this.SommeUR -= this.bufferToReceive.get(0).getTaille();
@@ -97,7 +139,7 @@ public class Users {
 			else {
 				this.bufferToReceive.get(0).setTaille(this.bufferToReceive.get(0).getTaille()-this.SommeUR);
 				this.SommeUR =0; 
-				System.out.println("je suis passer par la");
+				//System.out.println("je suis passer par la");
 				res = 0;
 			}
 		}
