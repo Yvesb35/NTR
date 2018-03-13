@@ -8,7 +8,7 @@ public class Users {
 	private double sommeConso;
 	private int SommeUR;
 	private double sommeDelai;
-	private int taillepaquet=20;
+	private int taillepaquet=10;
 	private ArrayList<Packet> bufferToReceive;
 	private int randomNBTrame;
 	private int moyNBpaq;
