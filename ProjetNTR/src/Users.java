@@ -118,6 +118,7 @@ public class Users {
 				this.SommeUR -= this.bufferToReceive.get(0).getTaille();
 				int tmp = this.bufferToReceive.get(0).getTime();
 				this.bufferToReceive.remove(0);
+				this.sommeConso ++;
 				return tmp;
 			}
 			//Cas où on a plus d'un paquet dans le buffer
@@ -125,6 +126,7 @@ public class Users {
 				this.SommeUR -= this.bufferToReceive.get(0).getTaille();
 				int tmp = this.bufferToReceive.get(0).getTime();
 				this.bufferToReceive.remove(0);
+				this.sommeConso++;
 				return tmp;
 			}
 		}
@@ -134,6 +136,7 @@ public class Users {
 				this.SommeUR -= this.bufferToReceive.get(0).getTaille();
 				int tmp = this.bufferToReceive.get(0).getTime();
 				this.bufferToReceive.remove(0);
+				this.sommeConso++;
 				return tmp;
 			}
 			else {

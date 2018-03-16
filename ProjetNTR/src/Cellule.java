@@ -17,9 +17,7 @@ public class Cellule {
 	private UR[][] bandePassante;
 	private HashMap<Users, ArrayList<Double>> delaiUtilisateurs;
 	private double moyenne;
-	private double[] resultatfinalglobal;
-	private double[] resultatfinalproche;
-	private double[] resultatfinalloin;
+	private double[] resultatFinal;
 	private double[] rempliTramePourcentage;
 	private ArrayList<Double> remplitramePour1000;
 	private double[] sommepaquetCreer;
@@ -29,9 +27,7 @@ public class Cellule {
 		this.utilisateursBesoin = new ArrayList<Users>();
 		this.bandePassante = new UR[128][5];
 		this.delaiUtilisateurs = new HashMap<Users, ArrayList<Double>>();
-		this.resultatfinalglobal = new double[10];
-		this.resultatfinalloin = new double[10];
-		this.resultatfinalproche = new double[10];
+		this.resultatFinal = new double[10];
 		this.rempliTramePourcentage = new double[10];
 		this.roundrobin= new ArrayList<Users>();
 		this.remplitramePour1000 = new ArrayList<Double>(); 
@@ -62,7 +58,6 @@ public class Cellule {
 			}
 			res = res / al.size();
 		}
-		
 		return res;
 	}
 	
@@ -78,7 +73,7 @@ public class Cellule {
 		return res;
 	}
 	
-	public void initdelaiuser(ArrayList<Users> us) {
+	public void initDelaiUser(ArrayList<Users> us) {
 		for (Users use : us) {
 			delaiUtilisateurs.put(use, new ArrayList<Double>());
 		}
@@ -134,6 +129,8 @@ public class Cellule {
 		long i = nbTrame;
 		long compte = 0;
 		double remplissageTrame = 0;
+		int DivUser = 1;
+		ArrayList<Users> ListeUsersMax = new ArrayList<Users>();
 		// Initialisation de la Bande Passante.
 		for (int a = 0; a < 128; a++) {
 			for (int b = 0; b < 5; b++) {
@@ -166,6 +163,7 @@ public class Cellule {
 			//XYSeries serie = new XYSeries("Delai ");
 			// On remet a chaque fois le nombre de trame que l'on doit envoyer
 			i=nbTrame;
+			long x = i;
 			while (i != 0) {
 				cell.utilisateursServis.clear();
 				cell.utilisateursBesoin.clear();
@@ -176,30 +174,54 @@ public class Cellule {
 				
 				cell.varierDebit();
 				cell.maxSNR(cell.utilisateursBesoin);
-				// Je sais pas ce que �a fou la ca ?
-				//cell.initdelaiuser(cell.utilisateursBesoin);
+				// Je sais pas ce que �a fou la ca ?
+				//cell.initDelaiUser(cell.utilisateursBesoin);
 	
 				i--;
+				x++;
 				// TODO est ce que si on clear la liste ca nous enleve pas toutes les references ?
 				// On initialise a chaque trame le nombre de paquet a recevoir des utilisateurs
 				cell.checkTheRandom(tabUser, nbUser);
 				for (Users u : cell.utilisateursBesoin) {
-					Random r = new Random();
-					
+					//TODO APPLIQUER CETTE FONCTION (LOI EXPONENTIELLE) / public static double Exp(double lambda) {
+			
 					int moypaquet = u.getMoyNBpaq();
 					//System.out.println("moypaquet = "+ moypaquet);
-					int nbp = r.nextInt(2*moypaquet+1);
+					//ExponentialDistribution exp = new ExponentialDistribution((double) moypaquet);
+					Random generator;
+					generator = new Random();
+					double num = generator.nextGaussian();
+					
+					double nbp = (num * 15) + moypaquet;
+					while(nbp < 0) {
+						generator = new Random();
+						num = generator.nextGaussian();
+						nbp = (num * 15 ) + moypaquet;
+					}
+					if(x%500 == 0) {
+						nbp = 3500;
+					}
+					//System.out.println(nbp);
+					/*Random rand = new Random();
+				    double tmp = rand.nextDouble();
+				    System.out.println(tmp);
+					double nbp = -(1 / moypaquet) * Math.log(1 - tmp);*///r.nextInt(2*moypaquet+1);
+					//System.out.println(nbp);
 					//System.out.println("nbp = " + nbp);
 					cell.sommepaquetCreer[nbUser-1] += (double)nbp;
 					//System.out.println(cell.delaiUtilisateurs.get(u));
-					u.addDemand(nbp);
+					u.addDemand((int)nbp);
 				}
 				//somme = 0;
 				double URalloue =0;
-				for (int a = 0; a < 128; a++){
-					for (int b = 0; b < 5; b++){
+				for (int timeSlot = 0;timeSlot < 5;timeSlot++){
+					for (int Porteuse = 0; Porteuse < 128;Porteuse++){					
 						cell.varierDebit();
-						Users proprio = cell.maxSNR(cell.utilisateursBesoin);
+						for (int k =0 ; k<DivUser; k ++){
+							Users chanceux = cell.maxSNR(cell.utilisateursBesoin);
+							ListeUsersMax.add(chanceux);
+						}
+						Users proprio =  cell.maxSNR(ListeUsersMax);// TODO Continuer la
 						while (proprio.assez()) {
 							cell.utilisateursServis.add(proprio);
 							cell.utilisateursBesoin.remove(proprio);
@@ -214,7 +236,7 @@ public class Cellule {
 						if (cell.utilisateursBesoin.isEmpty()) {
 							break;
 						}
-						cell.bandePassante[a][b].setProprietaire(proprio);
+						cell.bandePassante[Porteuse][timeSlot].setProprietaire(proprio);
 						URalloue++;
 						proprio.ajoutUR(proprio.getDebit());
 					}
@@ -238,27 +260,23 @@ public class Cellule {
 								u.setDelai(u.getDelai() + delai);
 								delaiGlobal += delai;
 							}
+							if (u.getConso()==500){
+								cell.moyenne = u.getDelai()/ u.getConso();
+								cell.delaiUtilisateurs.get(u).add(cell.moyenne);
+								u.setDelai(0);
+								u.setConso(u.getConso()-500);
+								
+							}
 						}
 					}
 
 					conso -= u.getBuffer().size();
 					if (conso > 0) {
 						consoGlobal += conso;
-						u.setConso(u.getConso()+ conso);
 					}
-					if (u.getConso() >10){
-						cell.moyenne = u.getDelai()/ u.getConso();
-						cell.delaiUtilisateurs.get(u).add(cell.moyenne);
-						if(u.getID()==0 ){
-							//serie.add(i, cell.moyenne);
-						}
-						u.setDelai(0);
-						u.setConso(u.getConso()-15);
-						
-					}
+					
 					
 					u.plusTimes();
-					
 				}
 				for (Users u : cell.utilisateursBesoin) {
 					conso = u.getBuffer().size();
@@ -269,25 +287,20 @@ public class Cellule {
 								u.setDelai(u.getDelai() + delai);
 								delaiGlobal += delai;
 							}
-
+							if (u.getConso()==500){
+								cell.moyenne = u.getDelai()/ u.getConso();
+								cell.delaiUtilisateurs.get(u).add(cell.moyenne);
+								u.setDelai(0);
+								u.setConso(u.getConso()-500);
+								
+							}
 						}
 					}
+
 					conso -= u.getBuffer().size();
 					if (conso > 0) {
 						consoGlobal += conso;
-						u.setConso(u.getConso()+ conso);
-					}
-					if (u.getConso() >10){
-						cell.moyenne = u.getDelai()/ u.getConso();
-						cell.delaiUtilisateurs.get(u).add(cell.moyenne);
-						if(u.getID()==0 ){
-							//serie.add(i, cell.moyenne);
-						}
-						u.setDelai(0);
-						u.setConso(u.getConso()-15);
-						
-		
-					}
+					}	
 					u.plusTimes();
 				}
 				cell.checkTheRandom(tabUser,nbUser);
@@ -298,8 +311,6 @@ public class Cellule {
 			System.out.println("Moyenne remplissageTrame = " + cell.moyenneListe(cell.remplitramePour1000));
 			cell.rempliTramePourcentage[nbUser-1] = cell.moyenneListe(cell.remplitramePour1000);
 			double moyenne = 0 ; 
-			double moyenneloin = 0;
-			double moyenneproche = 0;
 			for (Users u : cell.delaiUtilisateurs.keySet()){
 				moyenne +=  cell.moyenneListe(cell.delaiUtilisateurs.get(u));
 				/*if (u.getDelaiMoyen()==6){
@@ -319,7 +330,7 @@ public class Cellule {
 			//double moyennefinalproche = moyenneproche/ (nbUser*2);
 			//double moyennefinalloin = moyenneloin / (nbUser *2);
 			// On la stocke dans le tableau qui va servir a faire le graphe après.
-			cell.resultatfinalglobal[nbUser-1] = moyennefinal;
+			cell.resultatFinal[nbUser-1] = moyennefinal;
 			//cell.resultatfinalloin[nbUser - 1] = moyennefinalloin;
 			//cell.resultatfinalproche[nbUser -1] = moyennefinalproche;
 			/*XYDataset xyDatasettest = new XYSeriesCollection(serie);
@@ -328,20 +339,23 @@ public class Cellule {
 			ChartFrame frametest=new ChartFrame("Courbe %nbp/nb trame",charttest);
 			frametest.setVisible(true);
 			frametest.setSize(300,300);*/
-			// On fait le m�nage.
+			// On fait le m�nage.
 			cell.menage();
 		}
 		//on sort du nbUser
-		System.out.println(cell.toString(cell.resultatfinalglobal));
+		System.out.println(cell.toString(cell.resultatFinal));
 		//Global
 		XYSeries serie1 = new XYSeries("Courbe Délai");
 		//Ceux qui sont proche
 		XYSeries serie2 = new XYSeries("% UR");
 		// Ceux qui sont loin
 		XYSeries serie3 = new XYSeries("Nb Paquets");
+		
+		/*XYSeries serie4 = new XYSeries("Délai à 10 utilisateurs");
+		serie4.add(10, cell.resultatFinal[4]);*/
 
-		for(int j = 0 ; j<cell.resultatfinalglobal.length;j++){
-			serie1.add((j+1)*2, cell.resultatfinalglobal[j]);
+		for(int j = 0 ; j<cell.resultatFinal.length;j++){
+			serie1.add((j+1)*2, cell.resultatFinal[j]);
 		}
 		for(int j = 0 ; j<cell.rempliTramePourcentage.length;j++){
 			serie2.add((j+1)*2, cell.rempliTramePourcentage[j]);
@@ -379,5 +393,12 @@ public class Cellule {
 		ChartFrame frameNBPaquets=new ChartFrame("Courbe NbPaquets/TL",chartNBPaquets);
 		frameNBPaquets.setVisible(true);
 		frameNBPaquets.setSize(300,300);
+		
+		/*XYDataset xyDatasetRemplissage10Users = new XYSeriesCollection(serie4);
+		JFreeChart chartRemplissage10Users = ChartFactory.createXYLineChart
+			      ("Délai pour 10 utilisateurs", "TL", "Delai", xyDatasetRemplissage10Users, PlotOrientation.VERTICAL, true, true, false);
+		ChartFrame frameRemplissage10Users=new ChartFrame("Courbe D/TL",chartRemplissage10Users);
+		frameRemplissage10Users.setVisible(true);
+		frameRemplissage10Users.setSize(300,300);*/
 	}
 }
