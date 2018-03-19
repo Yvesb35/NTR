@@ -217,11 +217,7 @@ public class Cellule {
 				for (int timeSlot = 0;timeSlot < 5;timeSlot++){
 					for (int Porteuse = 0; Porteuse < 128;Porteuse++){					
 						cell.varierDebit();
-						for (int k =0 ; k<DivUser; k ++){
-							Users chanceux = cell.maxSNR(cell.utilisateursBesoin);
-							ListeUsersMax.add(chanceux);
-						}
-						Users proprio =  cell.maxSNR(ListeUsersMax);// TODO Continuer la
+						Users proprio =  cell.maxSNR(cell.utilisateursBesoin);
 						while (proprio.assez()) {
 							cell.utilisateursServis.add(proprio);
 							cell.utilisateursBesoin.remove(proprio);

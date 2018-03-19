@@ -12,6 +12,8 @@ public class Users {
 	private ArrayList<Packet> bufferToReceive;
 	private int randomNBTrame;
 	private int moyNBpaq;
+	private boolean dejaEu;
+	private int energie;
 
 	private int ID;
 
@@ -30,6 +32,8 @@ public class Users {
 		this.SommeUR=0;
 		this.bufferToReceive = new ArrayList<Packet>();
 		this.randomNBTrame = 0;
+		this.dejaEu = false;
+		this.energie = 0;
 	}
 
 	public int getSommeUR() {
@@ -108,6 +112,14 @@ public class Users {
 	public int getID(){
 		return this.ID;
 	}
+	// 4 quand c'est la premiere UR qui prends sur le time slot, 1 si il l'a deja eu.
+	public void addEnergie() {
+		if(this.dejaEu) {
+			this.energie +=1;
+		}else {
+			this.energie += 4;
+		}
+	}
 	//mettre le cas si taille = 8 et somme ur = 9 (pour pas faire de nb négatif)
 	public int soulager(){
 		int res =0;
@@ -150,6 +162,22 @@ public class Users {
 		return res;
 	}
 	
+	public boolean isDejaEu() {
+		return dejaEu;
+	}
+
+	public void setDejaEu(boolean dejaEu) {
+		this.dejaEu = dejaEu;
+	}
+
+	public int getEnergie() {
+		return energie;
+	}
+
+	public void setEnergie(int energie) {
+		this.energie = energie;
+	}
+
 	public void plusTimes(){
 		for( Packet p : bufferToReceive){
 			p.setTime(p.getTime()+1);
