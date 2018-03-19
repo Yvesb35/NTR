@@ -60,7 +60,7 @@ public class Cellule {
 		}
 		return res;
 	}
-	
+
 	public int moyenndelaiINT(ArrayList<Integer> al) {
 		int res = 0;
 		if(!al.isEmpty()){
@@ -72,7 +72,7 @@ public class Cellule {
 
 		return res;
 	}
-	
+
 	public void initDelaiUser(ArrayList<Users> us) {
 		for (Users use : us) {
 			delaiUtilisateurs.put(use, new ArrayList<Double>());
@@ -105,7 +105,7 @@ public class Cellule {
 			u.setDebit();
 		}
 	}
-	
+
 	public void menage() {
 		// on vide la map utilisateur / delai
 		this.delaiUtilisateurs.clear();
@@ -114,14 +114,14 @@ public class Cellule {
 		//On remet la moyenne a 0
 		this.moyenne = 0;
 	}
-	
+
 	public static void main(String[] args) {
 		// On creer notre Cellule
 		Cellule cell = new Cellule();
 		// On creer tout les utilisateurs
 		Users [] tabUser = new Users[20];
-		
-		
+
+
 		long nbTrame = 10000;
 		double moyenneGlobal = 0;
 		double delaiGlobal = 0;
@@ -137,17 +137,17 @@ public class Cellule {
 				cell.bandePassante[a][b] = new UR();
 			}
 		}
-		
-		
-		
+
+
+
 		// DEBUT DE LA SIMULATION
 		long debut = System.currentTimeMillis();
-		
+
 		for (int nbUser = 1; nbUser<11; nbUser++){
 			System.out.println("C'est parti pour "+ nbUser *2 + " utilisateurs");
 			System.out.println("*********************************************");
 			System.out.println("*********************************************");
-			
+
 			//On creer des utilisateur a chaque fois qu'on refait 
 			for(int ind = 0; ind <nbUser*2; ind++){
 				tabUser[ind] = new Users();
@@ -158,7 +158,7 @@ public class Cellule {
 				}
 				cell.delaiUtilisateurs.put(tabUser[ind], new ArrayList<Double>());
 			}
-			
+
 			//int somme;
 			//XYSeries serie = new XYSeries("Delai ");
 			// On remet a chaque fois le nombre de trame que l'on doit envoyer
@@ -171,12 +171,12 @@ public class Cellule {
 				for (int indicetabUser = 0; indicetabUser<nbUser*2; indicetabUser++){
 					cell.addUser(tabUser[indicetabUser]);
 				}
-				
+
 				cell.varierDebit();
 				cell.maxSNR(cell.utilisateursBesoin);
 				// Je sais pas ce que �a fou la ca ?
 				//cell.initDelaiUser(cell.utilisateursBesoin);
-	
+
 				i--;
 				x++;
 				// TODO est ce que si on clear la liste ca nous enleve pas toutes les references ?
@@ -184,14 +184,14 @@ public class Cellule {
 				cell.checkTheRandom(tabUser, nbUser);
 				for (Users u : cell.utilisateursBesoin) {
 					//TODO APPLIQUER CETTE FONCTION (LOI EXPONENTIELLE) / public static double Exp(double lambda) {
-			
+
 					int moypaquet = u.getMoyNBpaq();
 					//System.out.println("moypaquet = "+ moypaquet);
 					//ExponentialDistribution exp = new ExponentialDistribution((double) moypaquet);
 					Random generator;
 					generator = new Random();
 					double num = generator.nextGaussian();
-					
+
 					double nbp = (num * 15) + moypaquet;
 					while(nbp < 0) {
 						generator = new Random();
@@ -244,7 +244,7 @@ public class Cellule {
 				// On a fini la trame 
 				remplissageTrame = (URalloue/(128*5))*100;
 				cell.remplitramePour1000.add(remplissageTrame);// On met le taux de remplissage dans la liste
-				
+
 				double delai = 0;
 				double conso = 0;
 				for (Users u : cell.utilisateursServis) {
@@ -261,7 +261,7 @@ public class Cellule {
 								cell.delaiUtilisateurs.get(u).add(cell.moyenne);
 								u.setDelai(0);
 								u.setConso(u.getConso()-500);
-								
+
 							}
 						}
 					}
@@ -270,8 +270,8 @@ public class Cellule {
 					if (conso > 0) {
 						consoGlobal += conso;
 					}
-					
-					
+
+
 					u.plusTimes();
 				}
 				for (Users u : cell.utilisateursBesoin) {
@@ -288,7 +288,7 @@ public class Cellule {
 								cell.delaiUtilisateurs.get(u).add(cell.moyenne);
 								u.setDelai(0);
 								u.setConso(u.getConso()-500);
-								
+
 							}
 						}
 					}
@@ -346,7 +346,7 @@ public class Cellule {
 		XYSeries serie2 = new XYSeries("% UR");
 		// Ceux qui sont loin
 		XYSeries serie3 = new XYSeries("Nb Paquets");
-		
+
 		/*XYSeries serie4 = new XYSeries("Délai à 10 utilisateurs");
 		serie4.add(10, cell.resultatFinal[4]);*/
 
@@ -363,7 +363,7 @@ public class Cellule {
 		System.out.println("Moyenne global = " + moyenneGlobal);
 		long fin = System.currentTimeMillis();
 		System.out.println("Temps d'execution = " + (fin-debut)/1000 + "secondes");
-		
+
 		/*
 		 * Affichage des Courbes
 		 * 
@@ -371,25 +371,25 @@ public class Cellule {
 		 */
 		XYDataset xyDataset = new XYSeriesCollection(serie1);
 		JFreeChart chart = ChartFactory.createXYLineChart
-			      ("Délai en fonction du Trafic Load", "TL", "Delai", xyDataset, PlotOrientation.VERTICAL, true, true, false);
+				("Délai en fonction du Trafic Load", "TL", "Delai", xyDataset, PlotOrientation.VERTICAL, true, true, false);
 		ChartFrame frame1=new ChartFrame("Courbe D/TL",chart);
 		frame1.setVisible(true);
 		frame1.setSize(300,300);
-		
+
 		XYDataset xyDatasetRemplissage = new XYSeriesCollection(serie2);
 		JFreeChart chartRemplissage = ChartFactory.createXYLineChart
-			      ("% RU prises en fonction du Trafic Load", "TL", "% RU", xyDatasetRemplissage, PlotOrientation.VERTICAL, true, true, false);
+				("% RU prises en fonction du Trafic Load", "TL", "% RU", xyDatasetRemplissage, PlotOrientation.VERTICAL, true, true, false);
 		ChartFrame frameRemplissage=new ChartFrame("Courbe %RU/TL",chartRemplissage);
 		frameRemplissage.setVisible(true);
 		frameRemplissage.setSize(300,300);
-		
+
 		XYDataset xyDatasetNBPaquets = new XYSeriesCollection(serie3);
 		JFreeChart chartNBPaquets = ChartFactory.createXYLineChart
-			      ("NB PAQUETS en fonction du Trafic Load", "TL", "NBPAQUETS", xyDatasetNBPaquets, PlotOrientation.VERTICAL, true, true, false);
+				("NB PAQUETS en fonction du Trafic Load", "TL", "NBPAQUETS", xyDatasetNBPaquets, PlotOrientation.VERTICAL, true, true, false);
 		ChartFrame frameNBPaquets=new ChartFrame("Courbe NbPaquets/TL",chartNBPaquets);
 		frameNBPaquets.setVisible(true);
 		frameNBPaquets.setSize(300,300);
-		
+
 		/*XYDataset xyDatasetRemplissage10Users = new XYSeriesCollection(serie4);
 		JFreeChart chartRemplissage10Users = ChartFactory.createXYLineChart
 			      ("Délai pour 10 utilisateurs", "TL", "Delai", xyDatasetRemplissage10Users, PlotOrientation.VERTICAL, true, true, false);

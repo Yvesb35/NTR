@@ -13,7 +13,7 @@ public class Users {
 	private int randomNBTrame;
 	private int moyNBpaq;
 	private boolean dejaEu;
-	private int energie;
+	private double energie;
 
 	private int ID;
 
@@ -34,6 +34,7 @@ public class Users {
 		this.randomNBTrame = 0;
 		this.dejaEu = false;
 		this.energie = 0;
+		this.moyNBpaq = 0;
 	}
 
 	public int getSommeUR() {
@@ -118,14 +119,15 @@ public class Users {
 			this.energie +=1;
 		}else {
 			this.energie += 4;
+			this.dejaEu = true;
 		}
 	}
-	//mettre le cas si taille = 8 et somme ur = 9 (pour pas faire de nb nÃ©gatif)
+	//mettre le cas si taille = 8 et somme ur = 9 (pour pas faire de nb négatif)
 	public int soulager(){
 		int res =0;
-		//Cas oÃ¹ sommeUR est >= 10
+		//Cas où sommeUR est >= 10
 		if(this.SommeUR >= taillepaquet) {
-			//Cas oÃ¹ on a qu'un seul paquet  dans le buffer
+			//Cas où on a qu'un seul paquet  dans le buffer
 			if(this.bufferToReceive.size() == 1) {
 				this.SommeUR -= this.bufferToReceive.get(0).getTaille();
 				int tmp = this.bufferToReceive.get(0).getTime();
@@ -133,7 +135,7 @@ public class Users {
 				this.sommeConso ++;
 				return tmp;
 			}
-			//Cas oÃ¹ on a plus d'un paquet dans le buffer
+			//Cas où on a plus d'un paquet dans le buffer
 			else {
 				this.SommeUR -= this.bufferToReceive.get(0).getTaille();
 				int tmp = this.bufferToReceive.get(0).getTime();
@@ -142,7 +144,7 @@ public class Users {
 				return tmp;
 			}
 		}
-		//Cas oÃ¹ sommeUR est infÃ©rieur Ã  10
+		//Cas où sommeUR est inférieur à 10
 		else {
 			if(this.bufferToReceive.get(0).getTaille() <= this.SommeUR) {
 				this.SommeUR -= this.bufferToReceive.get(0).getTaille();
@@ -170,11 +172,11 @@ public class Users {
 		this.dejaEu = dejaEu;
 	}
 
-	public int getEnergie() {
+	public double getEnergie() {
 		return energie;
 	}
 
-	public void setEnergie(int energie) {
+	public void setEnergie(double energie) {
 		this.energie = energie;
 	}
 
