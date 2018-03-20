@@ -19,6 +19,8 @@ public class CelluleMulti {
 	private double moyenne;
 	private double[] resultatFinal;
 	private double[] resultatEnergie;
+	private double[] resultatfinalloin;
+	private double[] resultatfinalproche;
 	private double[] rempliTramePourcentage;
 	private ArrayList<Double> remplitramePour1000;
 	private double[] sommepaquetCreer;
@@ -29,9 +31,11 @@ public class CelluleMulti {
 		this.utilisateursBesoin = new ArrayList<Users>();
 		this.bandePassante = new UR[128][5];
 		this.delaiUtilisateurs = new HashMap<Users, ArrayList<Double>>();
-		this.resultatFinal = new double[10];
+		this.resultatFinal = new double[5];
 		this.resultatEnergie = new double[5];
-		this.rempliTramePourcentage = new double[10];
+		this.resultatfinalloin = new double [5];
+		this.resultatfinalproche = new double[5];
+		this.rempliTramePourcentage = new double[5];
 		this.roundrobin= new ArrayList<Users>();
 		this.remplitramePour1000 = new ArrayList<Double>(); 
 		this.sommepaquetCreer = new double[10];
@@ -336,56 +340,62 @@ public class CelluleMulti {
 		// On a fini toutes les trames.
 		// On fait les moyennes pour chaque users.
 		System.out.println("Moyenne remplissageTrame = " + cell.moyenneListe(cell.remplitramePour1000));
-		cell.rempliTramePourcentage[nbUser-1] = cell.moyenneListe(cell.remplitramePour1000);
+		cell.rempliTramePourcentage[DivUser] = cell.moyenneListe(cell.remplitramePour1000);
 		double moyenne = 0 ;
+		double moyenneloin = 0;
+		double moyenneproche = 0;
 		double sommeEnergie = 0;
 		for (Users u : cell.delaiUtilisateurs.keySet()){
 			moyenne +=  cell.moyenneListe(cell.delaiUtilisateurs.get(u));
 			sommeEnergie +=u.getEnergie();
-			/*if (u.getDelaiMoyen()==6){
+			if (u.getDelaiMoyen()==6){
 					moyenneloin += cell.moyenneListe(cell.delaiUtilisateurs.get(u));
 				}else{
 					moyenneproche += cell.moyenneListe(cell.delaiUtilisateurs.get(u));
-				}*/
+				}
 			//size += cell.delaiUtilisateurs.get(u).size();
-			//On doit clear tout les infos des users utilis√©
-			/*for(int k =0;k<nbUser*2;k++){
-					tabUser[k].clear();
-					cell.delaiUtilisateurs.get(tabUser[k]).clear();
-				}*/
 		}
 		// On fait la moyenne final 
 		double moyennefinal = moyenne / (nbUser*2);
 		cell.resultatEnergie[DivUser] = sommeEnergie/(nbUser*2);
-		//double moyennefinalproche = moyenneproche/ (nbUser*2);
-		//double moyennefinalloin = moyenneloin / (nbUser *2);
+		cell.resultatFinal[DivUser] = moyennefinal;
+		double moyennefinalproche = moyenneproche/ (nbUser*2);
+		double moyennefinalloin = moyenneloin / (nbUser *2);
 		// On la stocke dans le tableau qui va servir a faire le graphe apr√®s.
-		cell.resultatFinal[nbUser-1] = moyennefinal;
-		//cell.resultatfinalloin[nbUser - 1] = moyennefinalloin;
-		//cell.resultatfinalproche[nbUser -1] = moyennefinalproche;
+		
+		cell.resultatfinalloin[DivUser] = moyennefinalloin;
+		cell.resultatfinalproche[DivUser] = moyennefinalproche;
 		/*XYDataset xyDatasettest = new XYSeriesCollection(serie);
 			JFreeChart charttest = ChartFactory.createXYLineChart
 				      ("NBP paquet User1", "nb trames", "nbp", xyDatasettest, PlotOrientation.VERTICAL, true, true, false);
 			ChartFrame frametest=new ChartFrame("Courbe %nbp/nb trame",charttest);
 			frametest.setVisible(true);
 			frametest.setSize(300,300);*/
-		// On fait le mÔøΩnage.
+		// On fait le menage.
 		cell.menage();
-		}//fin du for du nb user
+		}//fin du for de la diversitÈ
 		//on sort du nbUser
-		System.out.println(cell.toString(cell.resultatFinal));
+		System.out.println("Global = "+cell.toString(cell.resultatFinal));
+		System.out.println("Loin = "+cell.toString(cell.resultatfinalloin));
+		System.out.println("Proche = "+cell.toString(cell.resultatfinalproche));
 		//Global
+		//Afficher trois croubes sur le mÍme graphe.
+		XYSeriesCollection Dataset = new XYSeriesCollection();
 		XYSeries serie1 = new XYSeries("Courbe DÈlai");
-		//Ceux qui sont proche
+		XYSeries serieProche = new XYSeries("Courbe DÈlai Proche");
+		XYSeries serieLoin= new XYSeries("Courbe DÈlai Loin");
+		
 		XYSeries serie2 = new XYSeries("% UR");
-		// Ceux qui sont loin
 		XYSeries serie3 = new XYSeries("Courbe Energie");
-
-		/*XYSeries serie4 = new XYSeries("D√©lai √  10 utilisateurs");
-		serie4.add(10, cell.resultatFinal[4]);*/
 
 		for(int j = 0 ; j<cell.resultatFinal.length;j++){
 			serie1.add((j+1)*2, cell.resultatFinal[j]);
+		}
+		for(int j = 0 ; j<cell.resultatfinalproche.length;j++){
+			serieProche.add((j+1)*2, cell.resultatfinalproche[j]);
+		}
+		for(int j = 0 ; j<cell.resultatfinalloin.length;j++){
+			serieLoin.add((j+1)*2, cell.resultatfinalloin[j]);
 		}
 		for(int j = 0 ; j<cell.rempliTramePourcentage.length;j++){
 			serie2.add((j+1)*2, cell.rempliTramePourcentage[j]);
@@ -403,9 +413,11 @@ public class CelluleMulti {
 		 * 
 		 * 
 		 */
-		XYDataset xyDataset = new XYSeriesCollection(serie1);
+		Dataset.addSeries(serie1);
+		Dataset.addSeries(serieLoin);
+		Dataset.addSeries(serieProche);
 		JFreeChart chart = ChartFactory.createXYLineChart
-				("D√©lai en fonction du Trafic Load", "TL", "Delai", xyDataset, PlotOrientation.VERTICAL, true, true, false);
+				("D√©lai en fonction du Trafic Load", "TL", "Delai", Dataset, PlotOrientation.VERTICAL, true, true, false);
 		ChartFrame frame1=new ChartFrame("Courbe D/TL",chart);
 		frame1.setVisible(true);
 		frame1.setSize(300,300);
