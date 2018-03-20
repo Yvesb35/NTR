@@ -350,7 +350,7 @@ public class CelluleMulti {
 			sommeEnergie +=u.getEnergie();
 			if (u.getDelaiMoyen()==6){
 					moyenneloin += cell.moyenneListe(cell.delaiUtilisateurs.get(u));
-				}else{
+			}else{
 					moyenneproche += cell.moyenneListe(cell.delaiUtilisateurs.get(u));
 				}
 			//size += cell.delaiUtilisateurs.get(u).size();
