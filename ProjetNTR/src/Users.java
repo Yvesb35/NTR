@@ -8,7 +8,7 @@ public class Users {
 	private double sommeConso;
 	private int SommeUR;
 	private double sommeDelai;
-	private int taillepaquet=10;
+	private int taillepaquet=20;
 	private ArrayList<Packet> bufferToReceive;
 	private int randomNBTrame;
 	private int moyNBpaq;
@@ -35,6 +35,9 @@ public class Users {
 		this.dejaEu = false;
 		this.energie = 0;
 		this.moyNBpaq = 0;
+	}
+	public int getDebitMoyen(){
+		return this.debitMoyen;
 	}
 
 	public int getSommeUR() {
@@ -116,26 +119,28 @@ public class Users {
 	// 4 quand c'est la premiere UR qui prends sur le time slot, 1 si il l'a deja eu.
 	public void addEnergie() {
 		if(this.dejaEu) {
+			//System.out.println("je suis ici dans le 1");
 			this.energie +=1;
 		}else {
+			//System.out.println("je suis dans le 4 ");
 			this.energie += 4;
 			this.dejaEu = true;
 		}
 	}
-	//mettre le cas si taille = 8 et somme ur = 9 (pour pas faire de nb négatif)
+	//mettre le cas si taille = 8 et somme ur = 9 (pour pas faire de nb nï¿½gatif)
 	public int soulager(){
 		int res =0;
-		//Cas où sommeUR est >= 10
+		//Cas oï¿½ sommeUR est >= 10
 		if(this.SommeUR >= taillepaquet) {
-			//Cas où on a qu'un seul paquet  dans le buffer
+			//Cas oï¿½ on a qu'un seul paquet  dans le buffer
 			if(this.bufferToReceive.size() == 1) {
 				this.SommeUR -= this.bufferToReceive.get(0).getTaille();
 				int tmp = this.bufferToReceive.get(0).getTime();
 				this.bufferToReceive.remove(0);
-				this.sommeConso ++;
+				this.sommeConso++;
 				return tmp;
 			}
-			//Cas où on a plus d'un paquet dans le buffer
+			//Cas oï¿½ on a plus d'un paquet dans le buffer
 			else {
 				this.SommeUR -= this.bufferToReceive.get(0).getTaille();
 				int tmp = this.bufferToReceive.get(0).getTime();
@@ -144,7 +149,7 @@ public class Users {
 				return tmp;
 			}
 		}
-		//Cas où sommeUR est inférieur à 10
+		//Cas oï¿½ sommeUR est infï¿½rieur ï¿½ 10
 		else {
 			if(this.bufferToReceive.get(0).getTaille() <= this.SommeUR) {
 				this.SommeUR -= this.bufferToReceive.get(0).getTaille();
